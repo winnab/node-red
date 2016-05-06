@@ -1,0 +1,63 @@
+<script type="text/x-red" data-template-name="job">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name">
+    </div>
+
+    <div class="form-row" style="margin-bottom: 0px;">
+        <label for="node-input-task_configuration"><i class="fa fa-wrench"></i> <span data-i18n="job.label.task_configuration"></span></label>
+        <input type="hidden" id="node-input-task_configuration" autofocus="autofocus">
+    </div>
+    
+    <div class="form-row node-text-editor-row">
+        <div style="height: 250px;" class="node-text-editor" id="node-input-task_configuration-editor" ></div>
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="job">
+        <p> Job Info</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('job',{
+        color:"#fdd0a2",
+        category: 'concourse-resource',
+        defaults: {
+            name: {value:""},
+            task_configuration: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "function.png",
+        label: function() {
+            return this.name||"job";
+        },
+        oneditprepare: function() {
+            var that = this;
+
+            this.editor = RED.editor.createEditor({
+                id: 'node-input-task_configuration-editor',
+                mode: 'ace/mode/yaml',
+                value: $("#node-input-task_configuration").val()
+            });
+
+            this.editor.focus();
+        },
+        oneditsave: function() {
+            var annot = this.editor.getSession().getAnnotations();
+            $("#node-input-task_configuration").val(this.editor.getValue());
+            delete this.editor;
+        },
+        oneditresize: function(size) {
+            var rows = $("#dialog-form>div:not(.node-text-editor-row)");
+            var height = $("#dialog-form").height();
+            for (var i=0;i<rows.size();i++) {
+                height -= $(rows[i]).outerHeight(true);
+            }
+            var editorRow = $("#dialog-form>div.node-text-editor-row");
+            height -= (parseInt(editorRow.css("marginTop"))+parseInt(editorRow.css("marginBottom")));
+            $(".node-text-editor").css("height",height+"px");
+            this.editor.resize();
+        }
+    });
+</script>
