@@ -22,11 +22,11 @@ var clone = require("clone");
 
 var defaultContext = {
     page: {
-        title: "Node-RED",
+        title: "Concourse Visual Studio",
         favicon: "favicon.ico"
     },
     header: {
-        title: "Node-RED",
+        title: "Concourse Visual Studio",
         image: "red/images/node-red.png"
     },
     asset: {
